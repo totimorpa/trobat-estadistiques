@@ -1,95 +1,95 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import React from "react";
+import {
+  Box,
+  Grid,
+  GridItem,
+  Image,
+  Link,
+  Heading,
+  Button,
+  Text,
+  Flex,
+} from "@chakra-ui/react";
 
-export default function Home() {
+function App() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <Flex
+      direction="column"
+      bg="blue.500"
+      minH="100vh"
+      p={3}
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Heading textAlign="center" color="white" m={5}>
+        Quin personatge ets?
+      </Heading>
+
+      <Box>
+        <Grid
+          templateColumns="repeat(2, 1fr)"
+          gap={6}
+          justifyContent="center"
+          alignItems="center"
+          h="100%"
+        >
+          <GridItem>
+            <Link href="/diaz">
+              <Image
+                src="diaz.png"
+                alt="Image 1"
+                sx={{ borderRadius: 30 }}
+                _hover={{ transform: "scale(1.1)" }}
+              />
+            </Link>
+          </GridItem>
+          <GridItem>
+            <Link href="/enric">
+              <Image
+                src="enric.png"
+                alt="Image 2"
+                sx={{ borderRadius: 30 }}
+                _hover={{ transform: "scale(1.1)" }}
+              />
+            </Link>
+          </GridItem>
+          <GridItem>
+            <Link href="/toti">
+              <Image
+                src="toti.png"
+                alt="Image 3"
+                sx={{ borderRadius: 30 }}
+                _hover={{ transform: "scale(1.1)" }}
+              />
+            </Link>
+          </GridItem>
+          <GridItem>
+            <Link href="/sales">
+              <Image
+                src="sales.png"
+                alt="Image 4"
+                sx={{ borderRadius: 30 }}
+                _hover={{ transform: "scale(1.1)" }}
+              />
+            </Link>
+          </GridItem>
+        </Grid>
+      </Box>
+      <Box textAlign={"center"}>
+        <Link href="/dashboard">
+          <Button
+            sx={{ w: "200px", h: "200px" }}
+            bg="transparent"
+            _hover={{ bg: "transparent" }}
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+            <Text fontSize={"100"} _hover={{ fontSize: "110" }}>
+              📊
+            </Text>
+          </Button>
+        </Link>
+      </Box>
+    </Flex>
   );
 }
+
+export default App;
