@@ -1,4 +1,5 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+"use client";
+import { Box, Flex, Heading, Text, IconButton } from "@chakra-ui/react";
 import {
   LineChart,
   Line,
@@ -7,37 +8,59 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/navigation";
 
 const data = [
-  { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
-  { name: "Page B", uv: 300, pv: 1398, amt: 2210 },
-  { name: "Page C", uv: 200, pv: 9800, amt: 2290 },
-  { name: "Page D", uv: 278, pv: 3908, amt: 2000 },
-  { name: "Page E", uv: 189, pv: 4800, amt: 2181 },
-  { name: "Page F", uv: 239, pv: 3800, amt: 2500 },
-  { name: "Page G", uv: 349, pv: 4300, amt: 2100 },
+  { month: "January", toiletsUsed: 400 },
+  { month: "February", toiletsUsed: 300 },
+  { month: "March", toiletsUsed: 200 },
+  { month: "April", toiletsUsed: 278 },
+  { month: "May", toiletsUsed: 189 },
+  { month: "June", toiletsUsed: 239 },
+  { month: "July", toiletsUsed: 349 },
+  { month: "August", toiletsUsed: 400 },
+  { month: "September", toiletsUsed: 300 },
+  { month: "October", toiletsUsed: 200 },
+  { month: "November", toiletsUsed: 278 },
+  { month: "December", toiletsUsed: 189 },
 ];
 
 function Dashboard() {
+  const router = useRouter();
   return (
-    <Box p={5}>
+    <Flex
+      direction="column"
+      bg="blue.500"
+      minH="100vh"
+      p={3}
+      alignItems="center"
+      justifyContent="center"
+    >
+      <IconButton
+        icon={<ArrowBackIcon />}
+        position="absolute"
+        top={3}
+        left={3}
+        borderRadius={50}
+        onClick={() => router.back()}
+        bg="transparent"
+        aria-label="Go back"
+      />
       <Heading mb={5}>Dashboard</Heading>
       <Flex direction="row" wrap="wrap">
-        <Box w="50%" p={3}>
-          <Text fontSize="xl" mb={3}>
-            Line Chart
-          </Text>
-          <LineChart width={400} height={400} data={data}>
-            <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+        <Box p={3} sx={{ bg: "gray.100", borderRadius: 10 }}>
+          <LineChart width={300} height={300} data={data}>
+            <Line type="monotone" dataKey="toiletsUsed" stroke="#8884d8" />
             <CartesianGrid stroke="#ccc" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="month" />
             <YAxis />
             <Tooltip />
           </LineChart>
         </Box>
         {/* Add more charts here */}
       </Flex>
-    </Box>
+    </Flex>
   );
 }
 
