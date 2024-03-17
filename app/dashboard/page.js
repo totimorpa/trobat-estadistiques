@@ -191,9 +191,6 @@ function Dashboard() {
         </Box>
       </Flex>
       <Flex direction="column" alignItems="center" mt={5}>
-        <Heading size="md" mb={3}>
-          Totals{" "}
-        </Heading>
         <Table variant="simple">
           <Thead>
             <Tr>
