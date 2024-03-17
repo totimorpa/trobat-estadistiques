@@ -1,33 +1,81 @@
 "use client";
-import { Box, Flex, Heading, Text, IconButton } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+
+import { Box, Flex, Heading, IconButton, Button } from "@chakra-ui/react";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   CartesianGrid,
   XAxis,
   YAxis,
   Tooltip,
+  Legend,
+  LabelList,
 } from "recharts";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 
-const data = [
-  { month: "January", toiletsUsed: 400 },
-  { month: "February", toiletsUsed: 300 },
-  { month: "March", toiletsUsed: 200 },
-  { month: "April", toiletsUsed: 278 },
-  { month: "May", toiletsUsed: 189 },
-  { month: "June", toiletsUsed: 239 },
-  { month: "July", toiletsUsed: 349 },
-  { month: "August", toiletsUsed: 400 },
-  { month: "September", toiletsUsed: 300 },
-  { month: "October", toiletsUsed: 200 },
-  { month: "November", toiletsUsed: 278 },
-  { month: "December", toiletsUsed: 189 },
-];
-
 function Dashboard() {
   const router = useRouter();
+  const [toiletData, setToiletData] = useState([]);
+  const [bedData, setBedData] = useState([]);
+  const [selectedData, setSelectedData] = useState(toiletData);
+  const [selectedFilters, setSelectedFilters] = useState([
+    "enric",
+    "sales",
+    "diaz",
+    "toti",
+  ]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const toiletResponse = await fetch("/api/getToiletData");
+        const bedResponse = await fetch("/api/getBedData");
+
+        if (toiletResponse.ok && bedResponse.ok) {
+          const toiletData = await toiletResponse.json();
+          const bedData = await bedResponse.json();
+          setToiletData(toiletData.result);
+          setBedData(bedData.result);
+          setSelectedData(toiletData.result);
+        } else {
+          console.error("Failed to fetch toilet or bed data");
+        }
+      } catch (error) {
+        console.error("Error fetching toilet or bed data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleFilterClick = (filter) => {
+    if (selectedFilters.includes(filter)) {
+      setSelectedFilters(selectedFilters.filter((f) => f !== filter));
+    } else {
+      setSelectedFilters([...selectedFilters, filter]);
+    }
+  };
+
+  const handleTogglePlot = (type) => {
+    if (type === "toilet") {
+      setSelectedData(toiletData);
+    } else if (type === "bed") {
+      setSelectedData(bedData);
+    }
+  };
+  const generateColor = (personName) => {
+    const colorMap = {
+      enric: "#FFC300",
+      sales: "#7FFF00",
+      diaz: "#FF5733",
+      toti: "#00BFFF",
+    };
+
+    return colorMap[personName.toLowerCase()];
+  };
+
   return (
     <Flex
       direction="column"
@@ -47,18 +95,80 @@ function Dashboard() {
         bg="transparent"
         aria-label="Go back"
       />
-      <Heading mb={5}>Dashboard</Heading>
+      <Flex mb={5} justifyContent="center" width="100%">
+        <Button
+          colorScheme="teal"
+          onClick={() => handleTogglePlot("toilet")}
+          mr={2}
+          isActive={selectedData === toiletData}
+        >
+          🚽
+        </Button>
+        <Button
+          colorScheme="teal"
+          onClick={() => handleTogglePlot("bed")}
+          isActive={selectedData === bedData}
+        >
+          🛏️
+        </Button>
+      </Flex>
       <Flex direction="row" wrap="wrap">
-        <Box p={3} sx={{ bg: "gray.100", borderRadius: 10 }}>
-          <LineChart width={300} height={300} data={data}>
-            <Line type="monotone" dataKey="toiletsUsed" stroke="#8884d8" />
+        <Flex mb={5} justifyContent="center" width="100%">
+          <Button
+            colorScheme={selectedFilters.includes("enric") ? "green" : "gray"}
+            onClick={() => handleFilterClick("enric")}
+            mr={2}
+          >
+            Enric
+          </Button>
+          <Button
+            colorScheme={selectedFilters.includes("sales") ? "green" : "gray"}
+            onClick={() => handleFilterClick("sales")}
+            mr={2}
+          >
+            Sales
+          </Button>
+          <Button
+            colorScheme={selectedFilters.includes("diaz") ? "green" : "gray"}
+            onClick={() => handleFilterClick("diaz")}
+            mr={2}
+          >
+            Diaz
+          </Button>
+          <Button
+            colorScheme={selectedFilters.includes("toti") ? "green" : "gray"}
+            onClick={() => handleFilterClick("toti")}
+          >
+            Toti
+          </Button>
+        </Flex>
+        <Box
+          p={3}
+          sx={{
+            bg: "gray.100",
+            borderRadius: 10,
+            maxWidth: "90%",
+            margin: "auto",
+          }}
+        >
+          <BarChart width={400} height={500} data={selectedData}>
             <CartesianGrid stroke="#ccc" />
             <XAxis dataKey="month" />
             <YAxis />
             <Tooltip />
-          </LineChart>
+            <Legend />
+            {selectedFilters.map((filter, index) => (
+              <Bar
+                key={index}
+                dataKey={filter}
+                name={filter}
+                fill={generateColor(filter)}
+              >
+                <LabelList dataKey={filter} position="top" />
+              </Bar>
+            ))}
+          </BarChart>
         </Box>
-        {/* Add more charts here */}
       </Flex>
     </Flex>
   );

@@ -1,4 +1,7 @@
 "use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 import {
   Box,
   Grid,
@@ -11,14 +14,47 @@ import {
   Text,
   IconButton,
   Flex,
+  ScaleFade,
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/navigation";
 
 function Page({ params }) {
   const nom = params.nom;
-  console.log(nom);
   const Router = useRouter();
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  const handleButtonClick = async (type) => {
+    try {
+      const response = await fetch("/api/addEntry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ type, nom }),
+      });
+
+      if (!response.ok) {
+        setShowError(true);
+        setTimeout(() => {
+          setShowError(false);
+        }, 3000);
+      } else {
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          Router.push("/");
+        }, 1000);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+    }
+  };
+
   return (
     <Flex
       direction="column"
@@ -59,6 +95,7 @@ function Page({ params }) {
           sx={{ w: "200px", h: "200px" }}
           bg="transparent"
           _hover={{ bg: "transparent" }}
+          onClick={() => handleButtonClick("toilet")} // Handle toilet button click
         >
           <Text fontSize={"130"} _hover={{ fontSize: "140" }}>
             🚽
@@ -68,12 +105,41 @@ function Page({ params }) {
           sx={{ w: "200px", h: "200px" }}
           bg="transparent"
           _hover={{ bg: "transparent" }}
+          onClick={() => handleButtonClick("bed")} // Handle bed button click
         >
           <Text fontSize={"150"} _hover={{ fontSize: "160" }}>
             🛏️
           </Text>
         </Button>
       </Stack>
+
+      {/* Success animation */}
+      <ScaleFade initialScale={0.9} in={showSuccess}>
+        <Box
+          bg="green.400"
+          color="white"
+          p={3}
+          mt={4}
+          borderRadius="md"
+          textAlign="center"
+        >
+          Gracies per contribuir a fer un mon millor!
+        </Box>
+      </ScaleFade>
+
+      {/* Error warning */}
+      <ScaleFade initialScale={0.9} in={showError}>
+        <Box
+          bg="red.400"
+          color="white"
+          p={3}
+          mt={4}
+          borderRadius="md"
+          textAlign="center"
+        >
+          Hi ha hagut un error. Si us plau, torna-ho a provar més tard.
+        </Box>
+      </ScaleFade>
     </Flex>
   );
 }
