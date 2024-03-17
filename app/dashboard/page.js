@@ -15,6 +15,7 @@ import {
   Tr,
   Th,
   Td,
+  Badge,
 } from "@chakra-ui/react";
 
 import {
@@ -86,10 +87,10 @@ function Dashboard() {
   };
   const generateColor = (personName) => {
     const colorMap = {
-      enric: "#FFC300",
-      sales: "#7FFF00",
+      enric: "#DAA520",
+      sales: "#008000", // Dark green
       diaz: "#FF5733",
-      toti: "#00BFFF",
+      toti: "purple",
     };
 
     return colorMap[personName.toLowerCase()];
@@ -116,17 +117,23 @@ function Dashboard() {
       />
       <Flex mb={5} justifyContent="center" width="100%">
         <Button
-          colorScheme="teal"
+          colorScheme="blue"
+          borderColor={selectedData === toiletData ? "black" : "transparent"}
+          borderWidth={selectedData === toiletData ? "2px" : "0"}
           onClick={() => handleTogglePlot("toilet")}
           mr={2}
-          isActive={selectedData === toiletData}
+          fontSize={"30"}
+          borderRadius="full"
         >
           🚽
         </Button>
         <Button
-          colorScheme="teal"
+          colorScheme="blue"
+          borderColor={selectedData === bedData ? "black" : "transparent"}
+          borderWidth={selectedData === bedData ? "2px" : "0"}
           onClick={() => handleTogglePlot("bed")}
-          isActive={selectedData === bedData}
+          fontSize={"30"}
+          borderRadius="full"
         >
           🛏️
         </Button>
@@ -134,9 +141,11 @@ function Dashboard() {
       <Flex direction="row" wrap="wrap">
         <Flex mb={5} justifyContent="center" width="100%">
           <Button
-            colorScheme={selectedFilters.includes("enric") ? "green" : "gray"}
+            colorScheme={selectedFilters.includes("enric") ? "yellow" : "gray"}
             onClick={() => handleFilterClick("enric")}
             mr={2}
+            p={2}
+            borderRadius={"full"}
           >
             Enric
           </Button>
@@ -144,19 +153,25 @@ function Dashboard() {
             colorScheme={selectedFilters.includes("sales") ? "green" : "gray"}
             onClick={() => handleFilterClick("sales")}
             mr={2}
+            p={2}
+            borderRadius={"full"}
           >
             Sales
           </Button>
           <Button
-            colorScheme={selectedFilters.includes("diaz") ? "green" : "gray"}
+            colorScheme={selectedFilters.includes("diaz") ? "red" : "gray"}
             onClick={() => handleFilterClick("diaz")}
             mr={2}
+            p={2}
+            borderRadius={"full"}
           >
             Diaz
           </Button>
           <Button
-            colorScheme={selectedFilters.includes("toti") ? "green" : "gray"}
+            colorScheme={selectedFilters.includes("toti") ? "purple" : "gray"}
             onClick={() => handleFilterClick("toti")}
+            p={2}
+            borderRadius={"full"}
           >
             Toti
           </Button>
@@ -195,8 +210,19 @@ function Dashboard() {
           <Thead>
             <Tr>
               {selectedFilters.map((filter) => (
-                <Th key={filter} color={generateColor(filter)}>
-                  {filter}
+                <Th
+                  key={filter}
+                  color={generateColor(filter)}
+                  textAlign="center"
+                >
+                  <Badge
+                    colorScheme="gray"
+                    color={generateColor(filter)}
+                    borderRadius="full"
+                    p="2"
+                  >
+                    {filter}
+                  </Badge>
                 </Th>
               ))}
             </Tr>
@@ -204,7 +230,7 @@ function Dashboard() {
           <Tbody>
             <Tr>
               {selectedFilters.map((filter) => (
-                <Td key={filter}>
+                <Td key={filter} textAlign="center">
                   {selectedData.reduce(
                     (total, data) => total + data[filter],
                     0
