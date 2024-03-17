@@ -1,7 +1,22 @@
 "use client";
 import { useState, useEffect } from "react";
 
-import { Box, Flex, Heading, IconButton, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  IconButton,
+  Button,
+  Text,
+  Table,
+  TableCaption,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+} from "@chakra-ui/react";
+
 import {
   BarChart,
   Bar,
@@ -30,8 +45,12 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const toiletResponse = await fetch("/api/getToiletData");
-        const bedResponse = await fetch("/api/getBedData");
+        const toiletResponse = await fetch("/api/getToiletData", {
+          cache: "no-store",
+        });
+        const bedResponse = await fetch("/api/getBedData", {
+          cache: "no-store",
+        });
 
         if (toiletResponse.ok && bedResponse.ok) {
           const toiletData = await toiletResponse.json();
@@ -147,14 +166,15 @@ function Dashboard() {
           sx={{
             bg: "gray.100",
             borderRadius: 10,
-            maxWidth: "90%",
             margin: "auto",
+            pr: 3,
           }}
         >
-          <BarChart width={400} height={500} data={selectedData}>
+          <BarChart width={350} height={500} data={selectedData}>
             <CartesianGrid stroke="#ccc" />
             <XAxis dataKey="month" />
-            <YAxis />
+            <YAxis tick={{ fontSize: 15 }} />
+
             <Tooltip />
             <Legend />
             {selectedFilters.map((filter, index) => (
@@ -169,6 +189,34 @@ function Dashboard() {
             ))}
           </BarChart>
         </Box>
+      </Flex>
+      <Flex direction="column" alignItems="center" mt={5}>
+        <Heading size="md" mb={3}>
+          Totals{" "}
+        </Heading>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              {selectedFilters.map((filter) => (
+                <Th key={filter} color={generateColor(filter)}>
+                  {filter}
+                </Th>
+              ))}
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              {selectedFilters.map((filter) => (
+                <Td key={filter}>
+                  {selectedData.reduce(
+                    (total, data) => total + data[filter],
+                    0
+                  )}
+                </Td>
+              ))}
+            </Tr>
+          </Tbody>
+        </Table>
       </Flex>
     </Flex>
   );
