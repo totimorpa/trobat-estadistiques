@@ -46,10 +46,10 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const toiletResponse = await fetch("/api/getToiletData", {
+        const toiletResponse = await fetch("api/getToiletData", {
           cache: "no-store",
         });
-        const bedResponse = await fetch("/api/getBedData", {
+        const bedResponse = await fetch("api/getBedData", {
           cache: "no-store",
         });
 
