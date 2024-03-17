@@ -54,12 +54,12 @@ export async function GET() {
       return monthObj;
     });
 
-    return NextResponse.json(
-      { result },
-      { headers: { "Cache-Control": "no-store" } }
-    );
+    return NextResponse.json({ result });
   } catch (error) {
     console.error(error);
-    return new NextResponse(500).json({ message: "Internal Server Error" });
+    return NextResponse.error({
+      status: 500,
+      message: "Internal Server Error",
+    });
   }
 }
