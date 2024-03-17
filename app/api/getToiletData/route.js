@@ -18,7 +18,7 @@ const monthNamesCatalan = [
   "Desembre",
 ];
 
-export async function GET(req, res) {
+export async function GET() {
   try {
     const data = await prisma.toilet.findMany({
       select: {
@@ -53,7 +53,11 @@ export async function GET(req, res) {
       });
       return monthObj;
     });
-    return NextResponse.json({ result });
+
+    return NextResponse.json(
+      { result },
+      { headers: { "Cache-Control": "no-store" } }
+    );
   } catch (error) {
     console.error(error);
     return new NextResponse(500).json({ message: "Internal Server Error" });
